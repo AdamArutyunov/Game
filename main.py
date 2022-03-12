@@ -11,7 +11,7 @@ size = (1280, 720)
 screen = pygame.display.set_mode(size, pygame.DOUBLEBUF, vsync=1)
 pygame.display.set_caption('Solo')
 
-MainLevel = Level.from_file('src/levels/test.lv')
+MainLevel = Level.from_file('src/levels/dropout.lv')
 
 CurrentGame = Game(MainLevel)
 
