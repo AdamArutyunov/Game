@@ -3,11 +3,55 @@ assets/music/drop_out.mp3
 90
 
 0
-8 1 d
-9 1 d
-10 1 d
-11 1 d
-12 1 o
-13 1 o
-14 1 o
-15 1 o
+8 h d
+9 h d
+10 h d
+11 h d
+12 h o
+13 h o
+14 h o
+15 h o
+16 q a
+16+h q a
+18 q s
+18+h q s
+20 q a
+20+h q a
+22 q s
+22+h q s
+24 q q
+24+h q q
+26 q z
+26+h q z
+28 q q
+28+h q q
+30 q z
+30+h q z
+
+0
+16+q q k
+16+h+q q k
+18+q q j
+18+h+q q j
+20+q q k
+20+h+q q k
+22+q q j
+22+h+q q j
+24+q q m
+24+h+q q m
+26+q q u
+26+h+q q u
+28+q q m
+28+h+q q m
+30+q q u
+30+h+q q u
+
+0
+17 1 space
+19 1 space
+21 1 space
+23 1 space
+25 1 space
+27 1 space
+29 1 space
+31 1 space
