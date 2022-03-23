@@ -1,3 +1,5 @@
+import os
+
 import pygame
 
 pygame.init()
@@ -7,8 +9,10 @@ from lib.Level import Level, Track
 from lib.Tile import Tile
 from lib.Game import Game
 
+os.environ['SDL_VIDEODRIVER'] = 'directx'
+
 size = (1440, 800)
-screen = pygame.display.set_mode(size, pygame.DOUBLEBUF, vsync=1)
+screen = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 pygame.display.set_caption('Solo')
 
 MainLevel = Level.from_file('src/levels/dropout.lv')

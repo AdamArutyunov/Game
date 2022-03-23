@@ -2,56 +2,185 @@ Drop Out
 assets/music/drop_out.mp3
 90
 
+
 0
-8 h d
+
+# Intro
+
+BLOCK 8
+0 h d
+1 h d
+2 h d
+3 h d
+4 h o
+5 h o
+6 h o
+7 h o
+
+# Verse, part 1
+
+BLOCK 16
+0 h q
+2 h p
+4 h w
+6 h o
+8 h a
+15 h s
+
+# Verse, part 2
+
+BLOCK 32
+0 q a
+h q a
+2 q s
+2h q s
+4 q a
+4h q a
+6 q s
+6h q s
+8 q q
+8h q q
+10 q z
+10h q z
+12 q q
+12h q q
+14 q z
+14h q z
+
+# Verse, part 3
+
+BLOCK 48
+0 q a
+1 h j
+4 q ;
+5 h f
+
+BLOCK 56
+0 q q
+1 h m
+4 q p
+5 h v
+
+
+0
+
+# Verse, part 1
+
+BLOCK 16
 9 h d
-10 h d
-11 h d
-12 h o
-13 h o
-14 h o
-15 h o
-16 q a
-16+h q a
-18 q s
-18+h q s
-20 q a
-20+h q a
-22 q s
-22+h q s
-24 q q
-24+h q q
-26 q z
-26+h q z
-28 q q
-28+h q q
-30 q z
-30+h q z
+14 h f
+
+# Verse, part 2
+
+BLOCK 32
+q q k
+hq q k
+2q q j
+2hq q j
+4q q k
+4hq q k
+6q q j
+6hq q j
+8q q m
+8hq q m
+10q q u
+10hq q u
+12q q m
+12hq q m
+14q q u
+14hq q u
+
+# Verse, part 3
+
+BLOCK 48
+q q s
+1 h k
+4q q l
+5 h d
+
+BLOCK 56
+q q w
+1 h ,
+4q q o
+5 h c
+
 
 0
-16+q q k
-16+h+q q k
-18+q q j
-18+h+q q j
-20+q q k
-20+h+q q k
-22+q q j
-22+h+q q j
-24+q q m
-24+h+q q m
-26+q q u
-26+h+q q u
-28+q q m
-28+h+q q m
-30+q q u
-30+h+q q u
+
+# Verse, part 1
+
+BLOCK 16
+10 h g
+13 h h
+
+# Verse
+
+BLOCK 32
+1 1 space
+3 1 space
+5 1 space
+7 1 space
+9 1 space
+11 1 space
+13 1 space
+15 1 space
+
+# Verse, part 3
+
+BLOCK 48
+h q d
+1 h l
+4h q k
+5 h s
+
+BLOCK 56
+h q e
+1 h .
+4h q i
+5 h x
+
 
 0
-17 1 space
-19 1 space
-21 1 space
-23 1 space
-25 1 space
-27 1 space
-29 1 space
-31 1 space
+
+# Verse, part 1
+
+BLOCK 16
+11 h j
+12 h k
+
+# Verse, part 3
+
+BLOCK 48
+hq q f
+1 h ;
+4hq q j
+5 h a
+
+BLOCK 56
+hq q r
+1 h /
+4hq q u
+5 h z
+
+
+0
+
+# Verse, part 1
+
+BLOCK 16
+1 h space
+3 h space
+5 h space
+7 h space
+
+# Verse, part 3
+
+BLOCK 48
+1 h space
+3 h space
+5 h space
+7 h space
+9 h space
+11 h space
+13 h space
+15 h space

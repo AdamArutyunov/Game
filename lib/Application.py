@@ -4,7 +4,7 @@ from Constants import TILE_SIZE, SECOND_WIDTH, LEFT_BORDER
 from .Exceptions import TileExpiredException
 from .Game import Game
 from .Font import PixelTimes
-from .Particle import CaptionParticle
+from .Particle import CaptionParticle, ProcessedTileParticle
 
 
 class State:
@@ -31,13 +31,13 @@ class MenuState(State):
 
 
 class GameState(State):
-    ALPHABET_ORDS = list(map(lambda c: ord(c), 'qwertyuiopasdfghjklzxcvbnm '))
+    ALPHABET_ORDS = list(map(lambda c: ord(c), 'qwertyuiopasdfghjklzxcvbnm ;,./1234567890'))
 
     def __init__(self, app, game):
         super().__init__(app)
 
         self.game = game
-        self.particles.append(CaptionParticle(1, (100, 50), 3, game.get_level().name))
+        self.add_particle(CaptionParticle(1, (100, 50), 3, game.get_level().name))
 
         self.screen_font = PixelTimes.get_font(72)
 
@@ -48,15 +48,19 @@ class GameState(State):
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
 
+    def add_particle(self, particle):
+        self.particles.append(particle)
+
     def process_tick(self):
         tick = self.app.tick
         dx = -self.app.tick * 60 * SECOND_WIDTH // 60
 
         for i, track in enumerate(self.game.get_tracks()):
-            self.app.screen.blit(
-                track.surface, 
-                (dx + LEFT_BORDER, (TILE_SIZE[1] + 5) * i + 200)
-            )
+            for tile in track.get_tiles():
+                self.app.screen.blit(
+                    tile.render(), 
+                    (dx + LEFT_BORDER + tile.start * SECOND_WIDTH, (TILE_SIZE[1] + 5) * i + 200)
+                )
 
             try:
                 track.check_expired(tick)
@@ -72,9 +76,10 @@ class GameState(State):
                 width=2
             )
 
-            particles = filter(lambda x: x.is_active(tick), self.particles)
+            self.particles = list(filter(lambda x: not x.is_expired(tick), self.particles))
 
-            for particle in particles:
+            active_particles = filter(lambda x: x.is_active(tick), self.particles)
+            for particle in active_particles:
                 surface = particle.render(tick)
                 self.app.screen.blit(surface, particle.coords)
 
@@ -83,11 +88,28 @@ class GameState(State):
 
         if event.type == pygame.KEYDOWN:
             if event.key in GameState.ALPHABET_ORDS:
-                for track in self.game.get_tracks():
-                    track.process_key(tick, event.key)
+                for i, track in enumerate(self.game.get_tracks()):
+                    processed_tiles = track.process_key(tick, event.key)
 
-                particle = CaptionParticle(tick, (500, 600), 0.5, chr(event.key))
-                self.particles.append(particle)
+                    for tile in processed_tiles:
+                        dx = -tick * 60 * SECOND_WIDTH // 60
+                        particle = ProcessedTileParticle(
+                            tick, 
+                            (dx + LEFT_BORDER + tile.start * SECOND_WIDTH, (TILE_SIZE[1] + 5) * i + 200),
+                            tile,
+                        )
+
+                        self.add_particle(particle)
+
+                right = 200
+                for particle in self.particles:
+                    if isinstance(particle, CaptionParticle):
+                        right = max(right, particle.coords[0] + particle.width + 5)
+                        while right > self.app.screen.get_size()[0]:
+                            right -= self.app.screen.get_size()[0]
+
+                particle = CaptionParticle(tick, (right, 650), 0.5, chr(event.key), 72, 'white', 0, 0.5)
+                self.add_particle(particle)
 
 
 class GameOverState(State):
@@ -121,11 +143,11 @@ class Application:
         self.state = state(self, *args, **kwargs)
         self.clear_ticker()
 
-    def clear_ticker(self):
-        self.start_tick = pygame.time.get_ticks() / 1000
-
     def get_state(self):
         return self.state
+
+    def clear_ticker(self):
+        self.start_tick = pygame.time.get_ticks() / 1000
 
     def run(self):
         from time import time
@@ -147,7 +169,7 @@ class Application:
             self.state.process_tick()
 
             pygame.display.flip()
-            clock.tick(60)
+            clock.tick()
 
             new_time = time()
             last_time = new_time

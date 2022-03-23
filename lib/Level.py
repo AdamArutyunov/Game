@@ -29,47 +29,56 @@ class Level:
         with open(file_src) as f:
             file = f.read().strip(' \n')
 
-        blocks = file.split('\n\n')
-        if len(blocks) == 0:
+        sections = file.split('\n\n\n')
+        if not sections:
             raise Exception('Level parse error: no level info.')
 
-        level_info = blocks[0].split('\n')
+        level_info = sections[0].split('\n')
         level_name, level_music_src, bpm = level_info
         bpm = int(bpm)
 
         level = Level(level_name, level_music_src)
 
-        for block in blocks[1:]:
-            block_lines = block.split('\n')
+        for section in sections[1:]:
+            lines = section.split('\n')
 
-            track_start = int(block_lines[0]) * 60 / bpm
+            track_start = int(lines[0]) * 60 / bpm
             track = Track(track_start)
             
-            for tile_line in block_lines[1:]:
-                start_beat, duration_beat, letter = tile_line.split()
+            block_start = 0
+
+            for line in lines[1:]:
+                print('Line', line)
+                if not line.strip():
+                    block_start = 0
+                    continue
+
+                if line.startswith('#'):
+                    continue
+
+                if line.startswith('BLOCK'):
+                    block_start = int(line.split()[1])
+                    continue
+
+                start_beat, duration_beat, letter = line.split()
 
                 if letter in LETTER_ALIASES:
                     letter = LETTER_ALIASES[letter]
 
                 start_beats = 0
-                start_beat_parts = start_beat.split('+')
                 duration_beats = 0
-                duration_beat_parts = duration_beat.split('+')
 
-                for part in start_beat_parts:
-                    try:
-                        start_beats += float(part)
-                    except Exception:
-                        start_beats += BEAT_ALIASES[part]
+                for beat_alias, beats in BEAT_ALIASES.items():
+                    while beat_alias in start_beat:
+                        start_beats += beats
+                        start_beat = start_beat.replace(beat_alias, '', 1)
 
-                for part in duration_beat_parts:
-                    try:
-                        duration_beats += float(part)
-                    except Exception:
-                        duration_beats += BEAT_ALIASES[part]
+                    while beat_alias in duration_beat:
+                        duration_beats += beats
+                        duration_beat = duration_beat.replace(beat_alias, '', 1)
 
-                start = start_beats * 60 / bpm - 0.1
-                duration = duration_beats * 60 / bpm
+                start = (block_start + int(start_beat or '0') + start_beats) * 60 / bpm
+                duration = (int(duration_beat or '0') + duration_beats) * 60 / bpm
 
                 tile = Tile(start, duration, ord(letter))
                 track.add_tile(tile)
@@ -82,9 +91,19 @@ class Level:
     def add_track(self, track):
         self.tracks.append(track)
 
+    def get_tracks(self):
+        return self.tracks
+
     def update(self, timestamp):
         for track in self.tracks:
             track.check_expired(timestamp)
+
+    def process_key(self, timestamp, key):
+        processed_tiles = []
+        for track in self.tracks:
+            processed_tiles += track.process_key(timestamp, key)
+
+        return processed_tiles
 
     def reset(self):
         for track in self.tracks:
@@ -98,6 +117,9 @@ class Track:
         self.end = start
 
         self.surface = pygame.Surface((0, TILE_SIZE[1]))
+
+    def get_tiles(self):
+        return self.tiles
 
     def add_tile(self, tile):
         self.tiles.append(tile)
@@ -139,13 +161,13 @@ class Track:
             middle = (left + right) // 2
             middle_tile = self.tiles[middle]
 
-            if middle_tile.start <= timestamp:
+            if middle_tile.start <= timestamp + 0.1:
                 left = middle
             else:
                 right = middle
 
         tile = self.tiles[left]
-        if tile.start <= timestamp < tile.end:
+        if tile.start <= timestamp + 0.1 and timestamp < tile.end:
             return tile
 
     def check_expired(self, timestamp):
@@ -168,9 +190,9 @@ class Track:
         tile = self.get_tile(timestamp)
 
         if tile and tile.key == key:
-            tile.process()
+            return [tile.process()]
 
-        self.render()
+        return []
 
     def reset(self):
         for tile in self.tiles:

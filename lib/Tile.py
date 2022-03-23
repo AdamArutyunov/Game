@@ -14,6 +14,8 @@ class Tile:
 
         self.key = key
 
+        self.render()
+
     def check_expired(self, timestamp):
         return timestamp > self.end and not self.processed
 
@@ -33,11 +35,12 @@ class Tile:
         text = pixel_times.render(str(self), 0, 'white')
 
         surface.blit(text, (13, 15))
-        
-        return surface
+        self.surface = surface
+        return self.surface
 
     def process(self):
         self.processed = True
+        return self
 
     def reset(self):
         self.processed = False

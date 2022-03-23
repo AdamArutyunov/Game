@@ -8,5 +8,8 @@ class Game:
     def get_level(self):
         return self.level
 
+    def process_key(self, timestamp, key):
+        return self.level.process_key(timestamp, key)
+
     def reset(self):
         self.level.reset()
