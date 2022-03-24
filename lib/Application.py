@@ -5,6 +5,7 @@ from .Exceptions import TileExpiredException
 from .Game import Game
 from .Font import PixelTimes
 from .Particle import CaptionParticle, ProcessedTileParticle
+from .Utils import get_center
 
 
 class State:
@@ -23,11 +24,23 @@ class State:
 
 
 class MenuState(State):
+    def __init__(self, app, game):
+        super().__init__(app)
+
+        self.game = game
+
     def process_tick(self):
-        self.app.screen.fill('black')
+        screen = self.app.screen
+        title = PixelTimes.get_font(300).render('Solo', 0, 'white')
+        subtitle = PixelTimes.get_font(60).render('Press Enter to start', 0, 'white')
+
+        screen.blit(title, (get_center(screen, title)[0], 200))
+        screen.blit(subtitle, (get_center(screen, subtitle)[0], 500))
+
 
     def handle_event(self, event):
-        pass
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+            self.app.set_state(ApplicationState.GAME, self.game)
 
 
 class GameState(State):
@@ -78,8 +91,12 @@ class GameState(State):
 
             self.particles = list(filter(lambda x: not x.is_expired(tick), self.particles))
 
-            active_particles = filter(lambda x: x.is_active(tick), self.particles)
-            for particle in active_particles:
+            for particle in self.particles:
+                tick = self.app.tick
+                if not particle.is_active(tick):
+                    continue
+
+                particle.update(tick)
                 surface = particle.render(tick)
                 self.app.screen.blit(surface, particle.coords)
 
@@ -97,11 +114,12 @@ class GameState(State):
                             tick, 
                             (dx + LEFT_BORDER + tile.start * SECOND_WIDTH, (TILE_SIZE[1] + 5) * i + 200),
                             tile,
+                            (-SECOND_WIDTH, -TILE_SIZE[1] / 0.3),
                         )
 
                         self.add_particle(particle)
 
-                right = 200
+                right = 300
                 for particle in self.particles:
                     if isinstance(particle, CaptionParticle):
                         right = max(right, particle.coords[0] + particle.width + 5)
@@ -132,7 +150,7 @@ class Application:
     def __init__(self, screen):
         self.screen = screen
 
-        self.state = ApplicationState.MENU(self)
+        self.state = None
         self.running = False
         self.start_tick = 0
 

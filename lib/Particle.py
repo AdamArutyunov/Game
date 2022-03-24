@@ -1,14 +1,19 @@
+from easing_functions import CubicEaseOut
 import pygame
 
 from .Font import PixelTimes
+from Constants import TILE_SIZE
 
 
 class Particle:
-    def __init__(self, start, coords, duration=0):
+    def __init__(self, start, start_coords, duration=0, speed=(0, 0)):
         self.start = start
         self.duration = duration
         self.end = start + duration
-        self.coords = coords
+
+        self.start_coords = self.coords = start_coords
+
+        self.speed = speed
 
         self.width = 0
         self.height = 0
@@ -21,6 +26,12 @@ class Particle:
 
     def is_expired(self, time):
         return time >= self.end
+
+    def update(self, time):
+        self.coords = (
+            self.start_coords[0] + self.speed[0] * (time - self.start),
+            self.start_coords[1] + self.speed[1] * (time - self.start),
+        )
 
 
 class CaptionParticle(Particle):
@@ -58,14 +69,19 @@ class CaptionParticle(Particle):
 
 
 class ProcessedTileParticle(Particle):
-    def __init__(self, start, coords, tile):
-        super().__init__(start, coords, 10)
+    def __init__(self, start, coords, tile, speed):
+        duration = 0.15
 
-        self.surface = pygame.Surface.copy(tile.surface)
+        super().__init__(start, coords, duration, speed)
+
+        self.surface = pygame.Surface.copy(tile.surface).convert_alpha()
+        self.initial_coords = coords
+        self.easing_function = CubicEaseOut()
 
     def render(self, time):
-        phase = 1 - (time - self.start) / self.duration
-        self.surface.set_alpha(32)
-        print(self.surface.get_alpha())
+        phase = (time - self.start) / self.duration
+
+        easing_phase = self.easing_function(phase)
+        self.surface.set_alpha((1 - phase) * 128)
 
         return self.surface

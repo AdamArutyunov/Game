@@ -21,5 +21,5 @@ CurrentGame = Game(MainLevel)
 
 
 app = Application(screen)
-app.set_state(ApplicationState.GAME, CurrentGame)
+app.set_state(ApplicationState.MENU, CurrentGame)
 app.run()

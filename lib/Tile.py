@@ -23,7 +23,7 @@ class Tile:
         return chr(self.key)
 
     def render(self):
-        surface = pygame.Surface((SECOND_WIDTH * self.duration, TILE_SIZE[1]))
+        surface = pygame.Surface((SECOND_WIDTH * self.duration, TILE_SIZE[1]), pygame.SRCALPHA)
 
         if self.processed:
             return surface

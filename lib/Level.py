@@ -116,8 +116,6 @@ class Track:
         self.start = start
         self.end = start
 
-        self.surface = pygame.Surface((0, TILE_SIZE[1]))
-
     def get_tiles(self):
         return self.tiles
 
@@ -126,8 +124,6 @@ class Track:
         self.tiles.sort(key=lambda t: t.start)
 
         self.end = self.tiles[-1].end
-
-        self.render()
 
     def validate(self):
         stamps = []
@@ -176,16 +172,6 @@ class Track:
         if expired:
             raise TileExpiredException
 
-    def render(self):
-        surface = pygame.Surface((SECOND_WIDTH * self.end, TILE_SIZE[1]))
-
-        for tile in self.tiles:
-            tile_surface = tile.render()
-            surface.blit(tile_surface, (tile.start * SECOND_WIDTH, 0))
-
-        self.surface = surface
-        return surface
-
     def process_key(self, timestamp, key):
         tile = self.get_tile(timestamp)
 
@@ -197,6 +183,4 @@ class Track:
     def reset(self):
         for tile in self.tiles:
             tile.reset()
-
-        self.render()
 
