@@ -12,6 +12,7 @@ class State:
     def __init__(self, app):
         self.app = app
         self.particles = []
+        self.effects = []
 
     def process_tick(self):
         pass
@@ -21,6 +22,12 @@ class State:
 
     def destroy(self):
         pass
+
+    def add_particle(self, particle):
+        self.particles.append(particle)
+
+    def add_effect(self, effect):
+        self.effects.append(effect)
 
 
 class MenuState(State):
@@ -40,33 +47,42 @@ class MenuState(State):
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-            self.app.set_state(ApplicationState.GAME, self.game)
+            self.app.set_state(ApplicationState.GAME, self.game, 0)
 
 
 class GameState(State):
     ALPHABET_ORDS = list(map(lambda c: ord(c), 'qwertyuiopasdfghjklzxcvbnm ;,./1234567890'))
 
-    def __init__(self, app, game):
+    def __init__(self, app, game, offset=0):
         super().__init__(app)
 
         self.game = game
+        self.offset = offset
         self.add_particle(CaptionParticle(1, (100, 50), 3, game.get_level().name))
+
+        for track in game.get_tracks():
+            for tile in track.get_tiles():
+                if tile.start + tile.duration < offset:
+                    tile.process()
 
         self.screen_font = PixelTimes.get_font(72)
 
         pygame.mixer.music.load(game.get_level().music_src)
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(0, offset)
 
     def destroy(self):
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
 
-    def add_particle(self, particle):
-        self.particles.append(particle)
-
     def process_tick(self):
-        tick = self.app.tick
-        dx = -self.app.tick * 60 * SECOND_WIDTH // 60
+        tick = self.app.tick + self.offset
+        dx = -tick * 60 * SECOND_WIDTH // 60
+
+        data = {}
+        for effect in self.effects:
+            data.update(effect.affect(tick))
+        
+        self.app.screen.fill(data.get('background', (0, 0, 0)))
 
         for i, track in enumerate(self.game.get_tracks()):
             for tile in track.get_tiles():
@@ -79,7 +95,7 @@ class GameState(State):
                 track.check_expired(tick)
             except TileExpiredException as e:
                 self.game.reset()
-                self.app.set_state(ApplicationState.GAME, self.game)
+                self.app.set_state(ApplicationState.GAME, self.game, self.offset)
 
             pygame.draw.line(
                 self.app.screen,
@@ -92,7 +108,7 @@ class GameState(State):
             self.particles = list(filter(lambda x: not x.is_expired(tick), self.particles))
 
             for particle in self.particles:
-                tick = self.app.tick
+                tick = self.app.tick + self.offset
                 if not particle.is_active(tick):
                     continue
 
@@ -101,7 +117,7 @@ class GameState(State):
                 self.app.screen.blit(surface, particle.coords)
 
     def handle_event(self, event):
-        tick = self.app.tick
+        tick = self.app.tick + self.offset
 
         if event.type == pygame.KEYDOWN:
             if event.key in GameState.ALPHABET_ORDS:

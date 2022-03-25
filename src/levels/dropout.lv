@@ -61,6 +61,44 @@ BLOCK 56
 4 q p
 5 h v
 
+# Verse, part 4
+
+BLOCK 64
+0 h a
+5 h e
+6 h c
+10 h d
+12 h space
+13 h space
+14 h space
+15 h space
+
+# Interlude
+
+BLOCK 80
+0 q q
+1 q p
+BLOCK 82
+0 q q
+1 q p
+BLOCK 84
+0 q q
+1 q p
+BLOCK 86
+0 q q
+1 q p
+BLOCK 88
+0 q a
+1 q ;
+BLOCK 90
+0 q a
+1 q ;
+BLOCK 92
+0 h a
+1 h a
+2 h a
+3 h a
+
 
 0
 
@@ -104,6 +142,43 @@ q q w
 4q q o
 5 h c
 
+# Verse, part 4
+
+BLOCK 64
+1 h s
+9 h f
+
+# Interlude
+
+BLOCK 80
+q q w
+hq q o
+1hq q w
+1q q o
+BLOCK 82
+q q w
+hq q o
+1hq q w
+1q q o
+BLOCK 84
+q q w
+hq q o
+1hq q w
+1q q o
+BLOCK 86
+q q w
+hq q o
+BLOCK 88
+q q s
+hq q l
+1hq q s
+1q q l
+BLOCK 90
+q q s
+hq q l
+1hq q s
+1q q l
+
 
 0
 
@@ -138,6 +213,32 @@ h q e
 1 h .
 4h q i
 5 h x
+
+# Verse, part 4
+
+BLOCK 64
+2 h d
+8 h g
+
+# Interlude
+
+BLOCK 80
+h q space
+1h q space
+BLOCK 82
+h q space
+1h q space
+BLOCK 84
+h q space
+1h q space
+BLOCK 86
+h q space
+BLOCK 88
+h q space
+1h q space
+BLOCK 90
+h q space
+1h q space
 
 
 0
@@ -184,3 +285,29 @@ BLOCK 48
 11 h space
 13 h space
 15 h space
+
+# Verse, part 4
+
+BLOCK 64
+2 h k
+8 h h
+
+
+0
+
+# Verse, part 4
+
+BLOCK 64
+1 h l
+9 h j
+
+
+0
+
+# Verse, part 4
+
+BLOCK 64
+0 h ;
+5 h i
+6 h m
+10 h k

@@ -48,16 +48,20 @@ class Level:
             block_start = 0
 
             for line in lines[1:]:
-                print('Line', line)
-                if not line.strip():
+                print(line)
+                line = line.strip()
+                if not line:
+                    print('Line empty, block_start = 0')
                     block_start = 0
                     continue
 
                 if line.startswith('#'):
+                    print('Line is comment')
                     continue
 
                 if line.startswith('BLOCK'):
                     block_start = int(line.split()[1])
+                    print('Line is blockstart', block_start)
                     continue
 
                 start_beat, duration_beat, letter = line.split()
@@ -108,6 +112,9 @@ class Level:
     def reset(self):
         for track in self.tracks:
             track.reset()
+
+    def get_duration(self):
+        return max(map(lambda x: x.end, self.tracks))
 
 
 class Track:
