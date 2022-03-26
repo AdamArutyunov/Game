@@ -1,27 +1,24 @@
-from .Utils import LinearGradient
+from .Utils import LinearGradient, hex_to_rgb
 
 
 class Effect:
-    slug = 'effect'
-
-    def __init__(self, state, start, duration):
+    def __init__(self, start, duration):
         self.start = start
         self.duration = duration
         self.end = self.start + self.duration
 
-        self.state = state
-
     def affect(self, time):
-        pass
+        return {}
 
 
 class BackgroundColorEffect(Effect):
-    slug = 'background_color'
-
     def __init__(self, start, duration):
         self.colorpoints = []
 
-    def add_colorpoint(self, time, color):
+    def update(self, time, color):
+        time = float(time)
+        color = hex_to_rgb(color)
+
         self.colorpoints.append((time, color))
         self.colorpoints.sort(key=lambda x: x[0])
 
@@ -43,3 +40,9 @@ class BackgroundColorEffect(Effect):
                 break
 
         return data
+
+
+EFFECTS = {
+    'effect': Effect,
+    'background_color': BackgroundColorEffect,
+}

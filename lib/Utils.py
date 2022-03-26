@@ -17,6 +17,14 @@ def get_center(surface1, surface2):
     return (w1 - w2) / 2, (h1 - h2) / 2
 
 
+def hex_to_rgb(h):
+    h = h.strip('#')
+    if len(h) == 3:
+        h = h * 2
+
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
 class LinearGradient:
     @staticmethod
     def calculate(color1, color2, pos):

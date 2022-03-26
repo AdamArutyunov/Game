@@ -59,6 +59,7 @@ class GameState(State):
         self.game = game
         self.offset = offset
         self.add_particle(CaptionParticle(1, (100, 50), 3, game.get_level().name))
+        self.effects = game.get_level().get_effects()
 
         for track in game.get_tracks():
             for tile in track.get_tiles():

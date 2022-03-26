@@ -3,6 +3,7 @@ import pygame
 from Constants import TILE_SIZE, SECOND_WIDTH
 from lib.Exceptions import TileExpiredException
 from lib.Tile import Tile
+from lib.Effect import EFFECTS
 
 
 LETTER_ALIASES = {
@@ -15,12 +16,14 @@ BEAT_ALIASES = {
     't': 1 / 3,
     'q': 1 / 4,
     'o': 1 / 8,
+    'n': 1 / 9,
     's': 1 / 16,
 }
 
 class Level:
     def __init__(self, name='', music_src=''):
         self.tracks = []
+        self.effects = []
         self.name = name
         self.music_src = music_src
 
@@ -39,7 +42,7 @@ class Level:
 
         level = Level(level_name, level_music_src)
 
-        for section in sections[1:]:
+        for section in sections[1:-1]:
             lines = section.split('\n')
 
             track_start = int(lines[0]) * 60 / bpm
@@ -81,14 +84,31 @@ class Level:
                         duration_beats += beats
                         duration_beat = duration_beat.replace(beat_alias, '', 1)
 
-                start = (block_start + int(start_beat or '0') + start_beats) * 60 / bpm
-                duration = (int(duration_beat or '0') + duration_beats) * 60 / bpm
+                start = (block_start + float(start_beat or '0') + start_beats) * 60 / bpm
+                duration = (float(duration_beat or '0') + duration_beats) * 60 / bpm
 
                 tile = Tile(start, duration, ord(letter))
                 track.add_tile(tile)
 
             track.validate()
             level.add_track(track)
+
+
+        current_effect = None
+        for line in sections[-1].split('\n'):
+            line = line.strip()
+            if line.startswith('EFFECT'):
+                _, slug, effect_start, effect_duration = line.split()
+                start = float(effect_start)
+                duration = float(effect_duration)
+
+                effect = EFFECTS[slug](start, duration)
+                current_effect = effect
+
+                level.effects.append(effect)
+            else:
+                current_effect.update(*line.split())
+        
 
         return level
 
@@ -115,6 +135,9 @@ class Level:
 
     def get_duration(self):
         return max(map(lambda x: x.end, self.tracks))
+
+    def get_effects(self):
+        return self.effects
 
 
 class Track:
@@ -149,7 +172,7 @@ class Track:
                 d += 1
 
             if d > 1:
-                return False
+                raise Exception()
 
         return True
 

@@ -4,6 +4,7 @@ assets/music/drop_out.mp3
 
 
 0
+# TRACK 1
 
 # Intro
 
@@ -99,8 +100,15 @@ BLOCK 92
 2 h a
 3 h a
 
+# Chorus
+
+BLOCK 96
+n q a
+tt q h
+
 
 0
+# TRACK 2
 
 # Verse, part 1
 
@@ -181,6 +189,7 @@ hq q l
 
 
 0
+# TRACK 3
 
 # Verse, part 1
 
@@ -242,6 +251,7 @@ h q space
 
 
 0
+# TRACK 4
 
 # Verse, part 1
 
@@ -265,6 +275,7 @@ hq q r
 
 
 0
+# TRACK 5
 
 # Verse, part 1
 
@@ -294,6 +305,7 @@ BLOCK 64
 
 
 0
+# TRACK 6
 
 # Verse, part 4
 
@@ -303,6 +315,7 @@ BLOCK 64
 
 
 0
+# TRACK 7
 
 # Verse, part 4
 
@@ -311,3 +324,11 @@ BLOCK 64
 5 h i
 6 h m
 10 h k
+
+
+EFFECT background_color 0 100
+0 #000
+10.66 #880000
+21.33 #008800
+32 #000088
+64 #000
