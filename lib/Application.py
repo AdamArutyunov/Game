@@ -204,7 +204,7 @@ class Application:
             self.state.process_tick()
 
             pygame.display.flip()
-            clock.tick()
+            clock.tick(0)
 
             new_time = time()
             last_time = new_time

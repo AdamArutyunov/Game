@@ -21,5 +21,5 @@ MainLevel = Level.from_file('src/levels/dropout.lv')
 CurrentGame = Game(MainLevel)
 
 app = Application(screen)
-app.set_state(ApplicationState.GAME, CurrentGame)
+app.set_state(ApplicationState.GAME, CurrentGame, 61.7)
 app.run()

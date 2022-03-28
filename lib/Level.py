@@ -205,7 +205,7 @@ class Track:
     def process_key(self, timestamp, key):
         tile = self.get_tile(timestamp)
 
-        if tile and tile.key == key:
+        if tile and tile.key == key and not tile.is_processed():
             return [tile.process()]
 
         return []

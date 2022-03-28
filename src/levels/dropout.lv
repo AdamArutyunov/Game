@@ -100,11 +100,18 @@ BLOCK 92
 2 h a
 3 h a
 
-# Chorus
+# Chorus, part 1
 
 BLOCK 96
-n q a
-tt q h
+0 q a
+tnn q h
+1 q ;
+1tnn q g
+BLOCK 98
+0 q a
+tnn q h
+1 q ;
+1tnn q g
 
 
 0
@@ -187,6 +194,19 @@ hq q l
 1hq q s
 1q q l
 
+# Chorus, part 1
+
+BLOCK 96
+n q s
+tt q j
+1n q l
+1tt q f
+BLOCK 98
+n q s
+tt q j
+1n q l
+1tt q f
+
 
 0
 # TRACK 3
@@ -249,6 +269,19 @@ BLOCK 90
 h q space
 1h q space
 
+# Chorus, part 1
+
+BLOCK 96
+nn q d
+ttn q k
+1nn q k
+1ttn q d
+BLOCK 98
+nn q d
+ttn q k
+1nn q k
+1ttn q d
+
 
 0
 # TRACK 4
@@ -272,6 +305,19 @@ hq q r
 1 h /
 4hq q u
 5 h z
+
+# Chorus, part 1
+
+BLOCK 96
+t q f
+ttnn q l
+1t q j
+1ttnn q s
+BLOCK 98
+t q f
+ttnn q l
+1t q j
+1ttnn q s
 
 
 0
@@ -302,6 +348,15 @@ BLOCK 48
 BLOCK 64
 2 h k
 8 h h
+
+# Chorus, part 1
+
+BLOCK 96
+tn q g
+1tn q h
+BLOCK 98
+tn q g
+1tn q h
 
 
 0

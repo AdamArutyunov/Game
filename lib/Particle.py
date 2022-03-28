@@ -47,7 +47,7 @@ class CaptionParticle(Particle):
             transition_out=0.5):
         super().__init__(start, coords, duration)
         
-        self.surface = PixelTimes.get_font(font_size).render(caption, 0, color)
+        self.surface = PixelTimes.get_font(font_size).render(caption, 0, color).convert_alpha()
         self.width, self.height = self.surface.get_size()
 
         self.transition_in = transition_in

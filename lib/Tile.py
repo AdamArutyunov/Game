@@ -44,3 +44,6 @@ class Tile:
 
     def reset(self):
         self.processed = False
+
+    def is_processed(self):
+        return self.processed
