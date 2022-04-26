@@ -1,4 +1,5 @@
 import pygame
+import time
 
 from Constants import TILE_SIZE, SECOND_WIDTH, LEFT_BORDER
 from .Exceptions import TileExpiredException
@@ -13,6 +14,8 @@ class State:
         self.app = app
         self.particles = []
         self.effects = []
+
+        self.data = {}
 
     def process_tick(self):
         pass
@@ -79,11 +82,10 @@ class GameState(State):
         tick = self.app.tick + self.offset
         dx = -tick * 60 * SECOND_WIDTH // 60
 
-        data = {}
         for effect in self.effects:
-            data.update(effect.affect(tick))
+            self.data.update(effect.affect(tick))
         
-        self.app.screen.fill(data.get('background', (0, 0, 0)))
+        self.app.screen.fill(self.data.get('background', (0, 0, 0)))
 
         for i, track in enumerate(self.game.get_tracks()):
             for tile in track.get_tiles():
@@ -95,8 +97,9 @@ class GameState(State):
             try:
                 track.check_expired(tick)
             except TileExpiredException as e:
-                self.game.reset()
-                self.app.set_state(ApplicationState.GAME, self.game, self.offset)
+                if not self.data.get('godmode', False):
+                    self.game.reset()
+                    self.app.set_state(ApplicationState.GAME, self.game, self.offset)
 
             pygame.draw.line(
                 self.app.screen,
@@ -182,16 +185,14 @@ class Application:
         return self.state
 
     def clear_ticker(self):
-        self.start_tick = pygame.time.get_ticks() / 1000
+        self.start_tick = time.time()
 
     def run(self):
-        from time import time
         clock = pygame.time.Clock()
 
         self.running = True
         self.clear_ticker()
 
-        last_time = time()
         while self.running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -204,14 +205,11 @@ class Application:
             self.state.process_tick()
 
             pygame.display.flip()
-            clock.tick(0)
-
-            new_time = time()
-            last_time = new_time
+            time.sleep(1 / 144)
                 
     def stop(self):
         self.running = False
 
     @property
     def tick(self):
-        return pygame.time.get_ticks() / 1000 - self.start_tick
+        return time.time() - self.start_tick

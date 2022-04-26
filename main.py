@@ -10,9 +10,8 @@ from lib.Tile import Tile
 from lib.Game import Game
 from lib.Effect import BackgroundColorEffect
 
-os.environ['SDL_VIDEODRIVER'] = 'directx'
 
-size = (1440, 800)
+size = (0, 0)
 screen = pygame.display.set_mode(size, pygame.HWSURFACE | pygame.DOUBLEBUF)
 pygame.display.set_caption('Solo')
 

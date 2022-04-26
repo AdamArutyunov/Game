@@ -187,20 +187,20 @@ class Track:
             middle = (left + right) // 2
             middle_tile = self.tiles[middle]
 
-            if middle_tile.start <= timestamp + 0.1:
+            if middle_tile.start <= timestamp + 0.05:
                 left = middle
             else:
                 right = middle
 
         tile = self.tiles[left]
-        if tile.start <= timestamp + 0.1 and timestamp < tile.end:
+        if tile.start <= timestamp + 0.05 and timestamp < tile.end:
             return tile
 
     def check_expired(self, timestamp):
         expired = list(filter(lambda t: t.check_expired(timestamp), self.tiles))
 
         if expired:
-            raise TileExpiredException
+            raise TileExpiredException(expired[0])
 
     def process_key(self, timestamp, key):
         tile = self.get_tile(timestamp)
