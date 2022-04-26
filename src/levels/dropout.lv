@@ -113,6 +113,21 @@ tnn q h
 1 q ;
 1tnn q g
 
+# Chorus, part 1.5
+
+BLOCK 100
+0 q a
+h q a
+BLOCK 101
+0 q q
+h q q
+BLOCK 102
+0 q w
+h q w
+BLOCK 103
+0 q e
+h q e
+
 
 0
 # TRACK 2
@@ -207,6 +222,21 @@ tt q j
 1n q l
 1tt q f
 
+# Chorus, part 1.5
+
+BLOCK 100
+o q ;
+ho q ;
+BLOCK 101
+o q p
+ho q p
+BLOCK 102
+o q o
+ho q o
+BLOCK 103
+o q i
+ho q i
+
 
 0
 # TRACK 3
@@ -282,6 +312,21 @@ ttn q k
 1nn q k
 1ttn q d
 
+# Chorus, part 1.5
+
+BLOCK 100
+q q a
+hq q a
+BLOCK 101
+q q q
+hq q q
+BLOCK 102
+q q w
+hq q w
+BLOCK 103
+q q e
+hq q e
+
 
 0
 # TRACK 4
@@ -318,6 +363,21 @@ t q f
 ttnn q l
 1t q j
 1ttnn q s
+
+# Chorus, part 1.5
+
+BLOCK 100
+qo q ;
+hqo q ;
+BLOCK 101
+qo q p
+hqo q p
+BLOCK 102
+qo q o
+hqo q o
+BLOCK 103
+qo q i
+hqo q i
 
 
 0
