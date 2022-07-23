@@ -1,9 +1,10 @@
-import pyglet
+import pygame
 import time
 
 from Constants import TILE_SIZE, SECOND_WIDTH, LEFT_BORDER
 from .Exceptions import TileExpiredException
 from .Game import Game
+from .Font import PixelTimes
 from .Particle import CaptionParticle, ProcessedTileParticle
 from .Utils import get_center
 
@@ -60,40 +61,38 @@ class GameState(State):
 
         self.game = game
         self.offset = offset
-        #self.add_particle(CaptionParticle(1, (100, 50), 3, game.get_level().name))
-        #self.effects = game.get_level().get_effects()
+        self.add_particle(CaptionParticle(1, (100, 50), 3, game.get_level().name))
+        self.effects = game.get_level().get_effects()
 
         for track in game.get_tracks():
             for tile in track.get_tiles():
                 if tile.start + tile.duration < offset:
                     tile.process()
 
+        self.screen_font = PixelTimes.get_font(72)
 
-        #pygame.mixer.music.load(game.get_level().music_src)
-        #pygame.mixer.music.play(0, offset)
+        pygame.mixer.music.load(game.get_level().music_src)
+        pygame.mixer.music.play(0, offset)
 
     def destroy(self):
-        #pygame.mixer.music.stop()
-        #pygame.mixer.music.unload()
-        pass
+        pygame.mixer.music.stop()
+        pygame.mixer.music.unload()
 
     def process_tick(self):
         tick = self.app.tick + self.offset
         dx = -tick * 60 * SECOND_WIDTH // 60
 
-        #for effect in self.effects:
-        #    self.data.update(effect.affect(tick))
+        for effect in self.effects:
+            self.data.update(effect.affect(tick))
         
-        #self.app.screen.fill(self.data.get('background', (0, 0, 0)))
+        self.app.screen.fill(self.data.get('background', (0, 0, 0)))
 
         for i, track in enumerate(self.game.get_tracks()):
             for tile in track.get_tiles():
-                tile.sprite.moveTo(
-                    dx + LEFT_BORDER + tile.start * SECOND_WIDTH,
-                    (TILE_SIZE[1] + 5) * i + 200,
+                self.app.screen.blit(
+                    tile.render(), 
+                    (dx + LEFT_BORDER + tile.start * SECOND_WIDTH, (TILE_SIZE[1] + 5) * i + 200)
                 )
-
-                tile.draw()
 
             try:
                 track.check_expired(tick)
@@ -102,17 +101,16 @@ class GameState(State):
                     self.game.reset()
                     self.app.set_state(ApplicationState.GAME, self.game, self.offset)
 
-            #pygame.draw.line(
-            #    self.app.screen,
-            #    'white', 
-            #    (LEFT_BORDER, 200),
-            #    (LEFT_BORDER, self.app.screen.get_height() - 50),
-            #    width=2
-            #)
+            pygame.draw.line(
+                self.app.screen,
+                'white', 
+                (LEFT_BORDER, 200),
+                (LEFT_BORDER, self.app.screen.get_height() - 50),
+                width=2
+            )
 
-            #self.particles = list(filter(lambda x: not x.is_expired(tick), self.particles))
+            self.particles = list(filter(lambda x: not x.is_expired(tick), self.particles))
 
-            '''
             for particle in self.particles:
                 tick = self.app.tick + self.offset
                 if not particle.is_active(tick):
@@ -121,7 +119,6 @@ class GameState(State):
                 particle.update(tick)
                 surface = particle.render(tick)
                 self.app.screen.blit(surface, particle.coords)
-            '''
 
     def handle_event(self, event):
         tick = self.app.tick + self.offset
@@ -170,8 +167,8 @@ class ApplicationState:
 
 
 class Application:
-    def __init__(self, window):
-        self.window = window
+    def __init__(self, screen):
+        self.screen = screen
 
         self.state = None
         self.running = False
@@ -189,26 +186,30 @@ class Application:
 
     def clear_ticker(self):
         self.start_tick = time.time()
-        self.tick = 0
 
     def run(self):
+        clock = pygame.time.Clock()
+
         self.running = True
         self.clear_ticker()
 
-        def update(dt):
-            #for event in pygame.event.get():
-            #    if event.type == pygame.QUIT:
-            #        self.stop()
+        while self.running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.stop()
 
-            #    self.state.handle_event(event)
+                self.state.handle_event(event)
 
-            self.tick += dt
-
-            self.window.clear()
+            self.screen.fill('black')
 
             self.state.process_tick()
 
-        pyglet.clock.schedule_interval(update, 1 / 120.0)
-
+            pygame.display.flip()
+            time.sleep(1 / 144)
+                
     def stop(self):
         self.running = False
+
+    @property
+    def tick(self):
+        return time.time() - self.start_tick

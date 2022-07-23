@@ -1,6 +1,7 @@
 from easing_functions import CubicEaseOut
 import pygame
 
+from .Font import PixelTimes
 from Constants import TILE_SIZE
 
 
