@@ -187,7 +187,7 @@ class Track:
             middle = (left + right) // 2
             middle_tile = self.tiles[middle]
 
-            if middle_tile.start <= timestamp + 0.05:
+            if middle_tile.start <= timestamp + 0.10:
                 left = middle
             else:
                 right = middle

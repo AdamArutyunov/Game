@@ -1,9 +1,47 @@
-import pygame
+import pyglet
 
 from Constants import TILE_SIZE, SECOND_WIDTH
-from .Font import PixelTimes
 
-pixel_times = PixelTimes.get_font(TILE_SIZE[1] - 20)
+class TileSprite:
+    def __init__(self, width, height, key):
+        self.batch = pyglet.graphics.Batch()
+
+        self.rectangle = pyglet.shapes.BorderedRectangle(
+            x = 0,
+            y = 0,
+            width=width,
+            height=height,
+            border=5,
+            color=(0, 0, 0),
+            border_color=(255, 255, 255),
+            batch=self.batch,
+        )
+
+        self.label = pyglet.text.Label(
+            chr(key),
+            font_name='Pixel Times',
+            font_size=36,
+            x = 0,
+            y = 0,
+            batch=self.batch,
+        )
+
+
+    def move(self, x, dy):
+        self.rectangle.x += dx
+        self.rectangle.y += dy
+        self.label.x += dx
+        self.label.y += dy
+
+    def moveTo(self, x, y):
+        self.rectangle.x = x
+        self.rectangle.y = y
+        self.label.x = x + 10
+        self.label.y = y + 10
+
+    def draw(self):
+        self.batch.draw()
+
 
 class Tile:
     def __init__(self, start, duration, key):
@@ -14,7 +52,7 @@ class Tile:
 
         self.key = key
 
-        self.render()
+        self.sprite = TileSprite(SECOND_WIDTH * self.duration, TILE_SIZE[1], key)
 
     def check_expired(self, timestamp):
         return timestamp > self.end and not self.processed
@@ -22,21 +60,11 @@ class Tile:
     def __str__(self):
         return chr(self.key)
 
-    def render(self):
-        surface = pygame.Surface((SECOND_WIDTH * self.duration, TILE_SIZE[1]), pygame.SRCALPHA)
-
+    def draw(self):
         if self.processed:
-            return surface
+            return
 
-        pygame.draw.rect(surface, 'white', 
-                         (0, 0, surface.get_width(), surface.get_height()), 
-                         2, 10)
-        
-        text = pixel_times.render(str(self), 0, 'white')
-
-        surface.blit(text, (13, 15))
-        self.surface = surface
-        return self.surface
+        self.sprite.draw()
 
     def process(self):
         self.processed = True
