@@ -113,7 +113,7 @@ tnn q h
 1 q ;
 1tnn q g
 
-# Chorus, part 1.5
+# Chorus, part 1.25
 
 BLOCK 100
 0 q a
@@ -127,6 +127,8 @@ h q w
 BLOCK 103
 0 q e
 h q e
+
+# Chorus, part 1.5
 
 
 0
@@ -222,7 +224,7 @@ tt q j
 1n q l
 1tt q f
 
-# Chorus, part 1.5
+# Chorus, part 1.25
 
 BLOCK 100
 o q ;
@@ -236,6 +238,8 @@ ho q o
 BLOCK 103
 o q i
 ho q i
+
+# Chorus, part 2
 
 
 0
@@ -312,7 +316,7 @@ ttn q k
 1nn q k
 1ttn q d
 
-# Chorus, part 1.5
+# Chorus, part 1.25
 
 BLOCK 100
 q q a
@@ -364,7 +368,7 @@ ttnn q l
 1t q j
 1ttnn q s
 
-# Chorus, part 1.5
+# Chorus, part 1.25
 
 BLOCK 100
 qo q ;
